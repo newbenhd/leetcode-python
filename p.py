@@ -1,0 +1,205 @@
+from typing import Optional, List
+from collections import deque
+
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        # inorder dfs traversal and count the number of traverse. if the track number is equal to k,
+        # then return the node value.
+        # Recursion:
+        # Base case: root is None or k == track count
+        # Inorder dfs
+        output, count = -1, 0
+
+        def inorder(node: Optional[TreeNode]):
+            nonlocal output, count
+            if not node or count > k:
+                return
+            inorder(node.left)
+            count += 1
+            if count == k:
+                output = node.val
+                return
+            inorder(node.right)
+
+        inorder(root)
+        return output
+
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        # inorder traversal. And compare node.val and previous value (the starting previous value is negative infinity).
+        # if the comparison returns node.val is lower than prev value, then return False
+        # otherwise, reassign previous value to node.val. And go next.
+        lowest = -float("inf")
+
+        def inorder(node: Optional[TreeNode]) -> bool:
+            nonlocal lowest
+            if not node:
+                return True
+            if not (inorder(node.left) and lowest < node.val):
+                return False
+            lowest = node.val
+            return inorder(node.right)
+
+        return inorder(root)
+
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        # post-dfs carrying level depth from child to parent
+        # Recursion
+        # base case: root == null; then return 0
+        # each stack carrys previous level + 1
+        if root is None:
+            return 0
+        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        # preorder dfs to check current node of tree 1 is equal to current node of tree 2
+        # Recursion
+        # base case:
+        #   p != q -> return false
+        #   both p and q is None -> return true
+        # P(n):
+        #   P(n-1) and p == q
+        if p is None and q is None:
+            return True
+        if p is None or q is None:
+            return False
+
+        return (
+            p.val == q.val
+            and self.isSameTree(p.left, q.left)
+            and self.isSameTree(p.right, q.right)
+        )
+
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        # preorder dfs to swap current node left and right child. Continue until no child
+        # Base: left and right are None
+        # Base: current node is None
+        # F(n): swap(l, r) + F(n-1)
+        if not root:
+            return root
+        root.left, root.right = root.right, root.left
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+        return root
+
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        # post-order dfs
+        # current node should check path for both child.
+        # any node that has both child positive, then path is established.
+        # otherwise, return one or none of the child which is positive.
+        # also, remember if adding child to current node returns negative,
+        # it's better not to include it into path. In the case, path is
+        # already established on either left, right, or current node based on
+        # the highest value of them.
+        # Recursion:
+        # Base case: if current node is empty. return zero.
+        if not root:
+            return 0
+        output = root.val
+
+        def dfs(node: Optional[TreeNode]) -> int:
+            nonlocal output
+            if not node:
+                return 0
+            left = dfs(node.left)
+            right = dfs(node.right)
+            output = max(output, left + right + node.val)
+            highest = max(left + node.val, right + node.val, node.val, 0)
+            return highest
+
+        dfs(root)
+        return output
+
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        # use bfs to traverse the tree by level. Also, keep track of each
+        # level. And push the node on each level to list dedicated to the level.
+        # Use queue
+        output = []
+
+        def bfs(node, level):
+            if not node:
+                return
+            if level == len(output):
+                output.append([])
+            output[level].append(node.val)
+            bfs(node.left, level + 1)
+            bfs(node.right, level + 1)
+
+        bfs(root, 0)
+        return output
+
+    def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
+        # inorder dfs traversal from root. If current node matches to subRoot, then start the validation.
+        # if none of subRoot matches from dfs validation, then return false. If all the nodes of subRoot matches
+        # on dfs traversal node, then return true
+        # Recursion:
+        # Base: when current node is None, then return
+
+        if not root:
+            return False
+        if not subRoot:
+            return True
+        if root.val == subRoot.val and self.isSameTree(root, subRoot):
+            return True
+        return self.isSubtree(root.left, subRoot) or self.isSubtree(root.right, subRoot)
+
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        if not preorder or not inorder:
+            return None
+        mid = inorder.index(preorder[0])
+        return TreeNode(
+            preorder[0],
+            self.buildTree(preorder[1 : mid + 1], inorder[:mid]),
+            self.buildTree(preorder[mid + 1 :], inorder[mid + 1 :]),
+        )
+
+
+class Codec:
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+
+        :type root: TreeNode
+        :rtype: str
+        """
+        # postorder dfs with node value separate by comma, with empty
+        # child as empty string
+        if not root:
+            return "#"
+        return (
+            str(root.val)
+            + ","
+            + self.serialize(root.left)
+            + ","
+            + self.serialize(root.right)
+        )
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+
+        :type data: str
+        :rtype: TreeNode
+        """
+
+        def dfs(q: deque):
+            val = q.popleft()
+            if val == "#":
+                return None
+            parent = TreeNode(int(val))
+            parent.left = dfs(q)
+            parent.right = dfs(q)
+            return parent
+
+        return dfs(deque(data.split(",")))
+
+
+# Your Codec object will be instantiated and called as such:
+# ser = Codec()
+# deser = Codec()
+# ans = deser.deserialize(ser.serialize(root))
