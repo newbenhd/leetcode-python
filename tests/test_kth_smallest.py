@@ -14,13 +14,11 @@ def case2(TreeNode):
     )
 
 
-@pytest.mark.current
 def test_kth_smallest(solution, case1, benchmark):
     root, k = case1
     assert 1 == benchmark(solution.kthSmallest, root, k)
 
 
-@pytest.mark.current
 def test_kth_smallest_2(solution, case2, benchmark):
     root, k = case2
     assert 3 == benchmark(solution.kthSmallest, root, k)

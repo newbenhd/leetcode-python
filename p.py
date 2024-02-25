@@ -10,6 +10,20 @@ class TreeNode:
 
 
 class Solution:
+    def lowestCommonAncestor(
+        self, root: Optional[TreeNode], p: TreeNode, q: TreeNode
+    ) -> Optional[TreeNode]:
+        # postorder dfs to check if left child is p or q. check if current node is p or q. if either p or q was found, then another one
+        # might be on right subtree. This assumption applies on any size of tree.
+        # if another one was on right subtree, the LCA should be the current node, else, go parent node and do the procesure again.
+        if not root:
+            return None
+        if root.val > p.val and root.val > q.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        if root.val < p.val and root.val < q.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        return root
+
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
         # inorder dfs traversal and count the number of traverse. if the track number is equal to k,
         # then return the node value.
