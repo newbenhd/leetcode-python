@@ -9,6 +9,35 @@ class TreeNode:
         self.right = right
 
 
+class Trie:
+    def __init__(self):
+        self.tree = {}
+
+    def insert(self, word: str) -> None:
+        obj = self.tree
+        for c in word:
+            if c not in obj:
+                obj[c] = {}
+            obj = obj[c]
+        obj["*"] = {}
+
+    def search(self, word: str) -> bool:
+        obj = self.tree
+        for c in word:
+            if c not in obj:
+                return False
+            obj = obj[c]
+        return True if "*" in obj else False
+
+    def startsWith(self, prefix: str) -> bool:
+        obj = self.tree
+        for c in prefix:
+            if c not in obj:
+                return False
+            obj = obj[c]
+        return True
+
+
 class Solution:
     def lowestCommonAncestor(
         self, root: Optional[TreeNode], p: TreeNode, q: TreeNode
