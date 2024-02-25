@@ -38,6 +38,34 @@ class Trie:
         return True
 
 
+class WordDictionary:
+    def __init__(self):
+        self.tree = {}
+
+    def addWord(self, word: str) -> None:
+        tree = self.tree
+        for c in word:
+            if c not in tree:
+                tree[c] = {}
+            tree = tree[c]
+        tree["*"] = {}
+
+    def search(self, word: str) -> bool:
+        def dfs(i: int, counter: int, tree: dict) -> bool:
+            if counter > 2:
+                return False
+            if i == len(word):
+                return "*" in tree
+            if word[i] == ".":
+                for child in tree.values():
+                    if dfs(i + 1, counter + 1, child):
+                        return True
+                return False
+            return dfs(i + 1, counter, tree[word[i]]) if word[i] in tree else False
+
+        return dfs(0, 0, self.tree)
+
+
 class Solution:
     def lowestCommonAncestor(
         self, root: Optional[TreeNode], p: TreeNode, q: TreeNode
