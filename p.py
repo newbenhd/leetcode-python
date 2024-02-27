@@ -9,32 +9,40 @@ class TreeNode:
         self.right = right
 
 
+class Node:
+    def __init__(self):
+        self.children = {}
+        self.end = False
+        self.word = ""
+
+
 class Trie:
     def __init__(self):
-        self.tree = {}
+        self.node = Node()
 
     def insert(self, word: str) -> None:
-        obj = self.tree
+        node = self.node
         for c in word:
-            if c not in obj:
-                obj[c] = {}
-            obj = obj[c]
-        obj["*"] = {}
+            if c not in node.children:
+                node.children[c] = Node()
+            node = node.children[c]
+        node.end = True
+        node.word = word
 
     def search(self, word: str) -> bool:
-        obj = self.tree
+        node = self.node
         for c in word:
-            if c not in obj:
+            if c not in node.children:
                 return False
-            obj = obj[c]
-        return True if "*" in obj else False
+            node = node.children[c]
+        return node.end
 
     def startsWith(self, prefix: str) -> bool:
-        obj = self.tree
+        node = self.node
         for c in prefix:
-            if c not in obj:
+            if c not in node.children:
                 return False
-            obj = obj[c]
+            node = node.children[c]
         return True
 
 
@@ -67,6 +75,52 @@ class WordDictionary:
 
 
 class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        # preorder dfs to check left, top, right, bottom sequentially. Mark visited cell.
+        # skip cell which is marked and out of bound. backtrace the cell when child finished searching.
+        # continue until all board cell was visited or word was found.
+        # save the found word to output
+        # refresh board when dfs finished and continue with next word.
+        output = set()
+
+        trie = Trie()
+        for word in words:
+            trie.insert(word)
+
+        def dfs(node: Node, r, c):
+            if node.end:
+                output.add(node.word)
+            if (
+                not node.children
+                or r < 0
+                or r >= len(board)
+                or c < 0
+                or c >= len(board[0])
+                or board[r][c] == "*"
+            ):
+                return
+            cell = board[r][c]
+            board[r][c] = "*"
+            if cell in node.children:
+                dfs(node.children[cell], r + 1, c)
+                dfs(node.children[cell], r - 1, c)
+                dfs(node.children[cell], r, c + 1)
+                dfs(node.children[cell], r, c - 1)
+            board[r][c] = cell
+
+        for r in range(len(board)):
+            for c in range(len(board[r])):
+                cell = board[r][c]
+                board[r][c] = "*"
+                if cell in trie.node.children:
+                    node = trie.node.children[cell]
+                    dfs(node, r + 1, c)
+                    dfs(node, r - 1, c)
+                    dfs(node, r, c + 1)
+                    dfs(node, r, c - 1)
+                board[r][c] = cell
+        return list(output)
+
     def lowestCommonAncestor(
         self, root: Optional[TreeNode], p: TreeNode, q: TreeNode
     ) -> Optional[TreeNode]:
