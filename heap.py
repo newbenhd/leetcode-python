@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 
 class ListNode:
@@ -22,7 +22,12 @@ class Heap:
     def __init__(self):
         self.queue = []
 
-    def pick(self):
+    def size(self) -> int:
+        return len(self.queue)
+
+    def pick(self) -> int | None:
+        if not self.queue:
+            return None
         return self.queue[0][0]
 
     def left(self, i):
@@ -61,7 +66,7 @@ class Heap:
                 self.queue[i], self.queue[j] = self.queue[j], self.queue[i]
             i = j
 
-    def remove(self):
+    def remove(self) -> Tuple[int, int] | None:
         if not self.queue:
             return
         if len(self.queue) == 1:
@@ -70,6 +75,44 @@ class Heap:
         self.queue[0] = self.queue.pop()
         self.bubble_down(0)
         return x
+
+
+class MedianFinder:
+    def __init__(self):
+        self.minHeap = Heap()
+        self.maxHeap = Heap()
+
+    def peek(self) -> Tuple[int | None, int | None]:
+        return (self.maxHeap.pick(), self.minHeap.pick())
+
+    def addNum(self, number: int) -> None:
+        check = self.maxHeap.pick()
+        if check is None or check > number:
+            self.maxHeap.add((number, number))
+        else:
+            self.minHeap.add((number, -number))
+        if self.maxHeap.size() - self.minHeap.size() > 1:
+            x = self.maxHeap.remove()
+            if x:
+                self.minHeap.add((x[0], -x[1]))
+        elif self.minHeap.size() - self.maxHeap.size() > 1:
+            x = self.minHeap.remove()
+            if x:
+                self.maxHeap.add((x[0], -x[1]))
+
+    def findMedian(self) -> float | None:
+        if self.maxHeap.size() == self.minHeap.size():
+            x, y = self.maxHeap.pick(), self.minHeap.pick()
+            if x is not None and y is not None:
+                return (x + y) / 2
+            else:
+                return None
+        else:
+            return (
+                self.maxHeap.pick()
+                if self.maxHeap.size() > self.minHeap.size()
+                else self.minHeap.pick()
+            )
 
 
 class Solution:

@@ -1,5 +1,5 @@
 import pytest
-from heap import Solution, ListNode as Node, Heap as heap
+from heap import Solution, ListNode as Node, Heap as heap, MedianFinder as MFinder
 
 
 @pytest.fixture()
@@ -15,3 +15,8 @@ def ListNode():
 @pytest.fixture()
 def Heap():
     return heap
+
+
+@pytest.fixture()
+def MedianFinder():
+    return MFinder
