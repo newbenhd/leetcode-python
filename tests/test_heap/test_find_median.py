@@ -1,4 +1,4 @@
-def test_median_finder(MedianFinder):
+def test_median_finder(MedianFinder, benchmark):
     finder = MedianFinder()
     finder.addNum(1)
     assert finder.peek() == (1, None)
@@ -15,9 +15,10 @@ def test_median_finder(MedianFinder):
     finder.addNum(1000)
     assert finder.peek() == (2, 4)
     assert finder.findMedian() == 4
+    benchmark(finder.addNum, 20)
 
 
-def test_median_finder_2(MedianFinder):
+def test_median_finder_2(MedianFinder, benchmark):
     finder = MedianFinder()
     finder.addNum(5)
     finder.addNum(2)
@@ -26,7 +27,7 @@ def test_median_finder_2(MedianFinder):
     assert finder.findMedian() == 2
     finder.addNum(0)
     assert finder.peek() == (1, 2)
-    assert finder.findMedian() == 1.5
+    assert benchmark(finder.findMedian) == 1.5
 
 
 def test_median_finder_edge(MedianFinder):
