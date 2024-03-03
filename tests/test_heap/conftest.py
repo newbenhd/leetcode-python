@@ -1,5 +1,5 @@
 import pytest
-from heap import Solution, ListNode as Node
+from heap import Solution, ListNode as Node, Heap as heap
 
 
 @pytest.fixture()
@@ -10,3 +10,8 @@ def solution():
 @pytest.fixture()
 def ListNode():
     return Node
+
+
+@pytest.fixture()
+def Heap():
+    return heap
