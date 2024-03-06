@@ -1,4 +1,5 @@
-from typing import Optional
+from collections import deque
+from typing import Optional, List
 
 
 class Node:
@@ -24,6 +25,27 @@ class Node:
 
 
 class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        neighbors = [[] for _ in range(numCourses)]
+        indegree = [0] * numCourses
+        visited = []
+        for [a, b] in prerequisites:
+            neighbors[b].append(a)
+            indegree[a] += 1
+
+        dq = deque()
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                dq.append(i)
+        while dq:
+            head = dq.popleft()
+            visited.append(head)
+            for child in neighbors[head]:
+                indegree[child] -= 1
+                if indegree[child] == 0:
+                    dq.append(child)
+        return len(visited) == numCourses
+
     def cloneGraph(self, node: Optional[Node]) -> Optional[Node]:
         visited: dict = {None: None}
 
