@@ -25,6 +25,27 @@ class Node:
 
 
 class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        # if current cell is land and every edge of a cell is water, it's a land.
+        # if one or more edge is not water, dfs on the edge to turn the edge land into water
+        # iterate on grid and increment num of islands if the current cell is land
+        #   and dfs on the current cell respectively
+        H, L = len(grid), len(grid[0])
+        output = 0
+
+        def dfs(r: int, c: int):
+            grid[r][c] = "0"
+            for nr, nc in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]:
+                if 0 <= nr < H and 0 <= nc < L and grid[nr][nc] == "1":
+                    dfs(nr, nc)
+
+        for r in range(H):
+            for c in range(L):
+                if grid[r][c] == "1":
+                    output += 1
+                    dfs(r, c)
+        return output
+
     def pacificAtlantic_v2(self, heights: List[List[int]]) -> List[List[int]]:
         H, L = len(heights), len(heights[0])
         pacific, atlantic = set(), set()
