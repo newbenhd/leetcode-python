@@ -25,6 +25,17 @@ class Node:
 
 
 class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        setnums = set(nums)
+        longest = 0
+        for n in setnums:
+            if n - 1 not in setnums:
+                length = 1
+                while n + length in setnums:
+                    length += 1
+                longest = max(longest, length)
+        return longest
+
     def numIslands(self, grid: List[List[str]]) -> int:
         # if current cell is land and every edge of a cell is water, it's a land.
         # if one or more edge is not water, dfs on the edge to turn the edge land into water
