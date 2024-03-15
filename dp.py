@@ -20,3 +20,27 @@ class Solution:
             for n in range(coin, amount + 1):
                 dp[n] = min(dp[n], dp[n - coin] + 1)
         return -1 if dp[amount] == amount + 1 else dp[amount]
+
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        def bst(sub: List[int], n) -> int:
+            L, R = 0, len(sub) - 1
+            while L <= R:
+                mid = L + (R - L) // 2
+                if sub[mid] < n:
+                    L = mid + 1
+                elif sub[mid] > n:
+                    R = mid - 1
+                else:
+                    return mid
+
+            return L
+
+        output = []
+        for n in nums:
+            if len(output) == 0 or output[-1] < n:
+                output.append(n)
+            else:
+                i = bst(output, n)
+                if output[i] > n:
+                    output[i] = n
+        return len(output)
