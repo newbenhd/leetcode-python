@@ -2,6 +2,38 @@ from typing import List
 
 
 class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        dp = [False] * len(s) + [True]
+        for i in range(len(s) - 1, -1, -1):
+            for word in wordDict:
+                if (len(word) + i) <= len(s) and s[i : i + len(word)] == word:
+                    dp[i] = dp[i + len(word)]
+                if dp[i]:
+                    break
+        return dp[0]
+
+    def wordBreakRecursion(self, s: str, wordDict: List[str]) -> bool:
+        dp = {key: True for key in wordDict}
+
+        current = ""
+
+        def dfs(sub: str) -> bool:
+            nonlocal current
+            if len(sub) == 0:
+                return True
+            output = False
+            for word in wordDict:
+                if sub[: len(word)] in dp:
+                    current += sub[: len(word)]
+                    if len(current) > len(word):
+                        dp[current] = True
+                    if sub[len(word) :] in dp:
+                        return True
+                    output = output or dfs(sub[len(word) :])
+            return output
+
+        return dfs(s)
+
     def longestCommonSubsequenceRecursion(self, text1: str, text2: str) -> int:
         dp = [[-1] * len(text2) for _ in range(len(text1))]
 
