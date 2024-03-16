@@ -2,6 +2,36 @@ from typing import List
 
 
 class Solution:
+    def longestCommonSubsequenceRecursion(self, text1: str, text2: str) -> int:
+        dp = [[-1] * len(text2) for _ in range(len(text1))]
+
+        def dfs(r: int, c: int) -> int:
+            if r >= len(text1) or c >= len(text2):
+                return 0
+            if dp[r][c] != -1:
+                return dp[r][c]
+            count = 0
+            if text1[r] == text2[c]:
+                count = 1 + dfs(r + 1, c + 1)
+            left = dfs(r + 1, c)
+            right = dfs(r, c + 1)
+            dp[r][c] = max(left, right, count)
+            return dp[r][c]
+
+        return dfs(0, 0)
+
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        dp = [[0] * (len(text2) + 1) for _ in range(len(text1) + 1)]
+        for r in range(len(text1) - 1, -1, -1):
+            for c in range(len(text2) - 1, -1, -1):
+                count = 0
+                if text1[r] == text2[c]:
+                    count = 1 + dp[r + 1][c + 1]
+                count = max(count, dp[r + 1][c], dp[r][c + 1])
+                dp[r][c] = count
+
+        return dp[0][0]
+
     def climbStairs(self, n: int) -> int:
         if n < 2:
             return 1
