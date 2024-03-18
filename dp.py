@@ -2,6 +2,14 @@ from typing import List
 
 
 class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if len(nums) <= 2:
+            return max(nums)
+        dp = nums[:2] + [nums[2] + nums[0]] + [0] * (len(nums) - 3)
+        for i in range(3, len(nums)):
+            dp[i] = max(nums[i] + dp[i - 2], nums[i] + dp[i - 3])
+        return max(dp)
+
     def combinationSum4(self, nums: List[int], target: int) -> int:
         dp = [1] + [0] * target
         for r in range(1, target + 1):
@@ -9,18 +17,6 @@ class Solution:
                 if r - n >= 0:
                     dp[r] += dp[r - n]
         return dp[-1]
-
-    def combinationSum4Recursion(self, nums: List[int], target: int) -> int:
-        dp = [[1 for _ in range(len(nums))]] + [
-            [0 for _ in range(len(nums))] for _ in range(target)
-        ]
-        for r in range(1, target + 1):
-            for c in range(len(nums)):
-                p = r - nums[c]
-                if p >= 0:
-                    dp[r][c] += dp[p][c]
-
-        return sum(dp[target])
 
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         dp = [False] * len(s) + [True]
