@@ -2,6 +2,26 @@ from typing import List
 
 
 class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -> int:
+        dp = [1] + [0] * target
+        for r in range(1, target + 1):
+            for n in nums:
+                if r - n >= 0:
+                    dp[r] += dp[r - n]
+        return dp[-1]
+
+    def combinationSum4Recursion(self, nums: List[int], target: int) -> int:
+        dp = [[1 for _ in range(len(nums))]] + [
+            [0 for _ in range(len(nums))] for _ in range(target)
+        ]
+        for r in range(1, target + 1):
+            for c in range(len(nums)):
+                p = r - nums[c]
+                if p >= 0:
+                    dp[r][c] += dp[p][c]
+
+        return sum(dp[target])
+
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         dp = [False] * len(s) + [True]
         for i in range(len(s) - 1, -1, -1):
