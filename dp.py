@@ -2,6 +2,19 @@ from typing import List
 
 
 class Solution:
+    def rob2(self, nums: List[int]) -> int:
+        if len(nums) == 1:
+            return nums[0]
+
+        def helper(ns: List[int]) -> int:
+            p, p2 = ns[0], 0
+            for n in ns[1:]:
+                c = max(p2 + n, p)
+                p, p2 = c, p
+            return p
+
+        return max(helper(nums[:-1]), helper(nums[1:]))
+
     def rob(self, nums: List[int]) -> int:
         if len(nums) <= 2:
             return max(nums)
@@ -9,6 +22,12 @@ class Solution:
         for i in range(3, len(nums)):
             dp[i] = max(nums[i] + dp[i - 2], nums[i] + dp[i - 3])
         return max(dp)
+
+    def rob_upgrade(self, nums: List[int]) -> int:
+        dp = nums[:2]
+        for i in range(2, len(nums)):
+            dp.append(max(dp[i - 2] + nums[i], dp[i - 1]))
+        return dp[-1]
 
     def combinationSum4(self, nums: List[int], target: int) -> int:
         dp = [1] + [0] * target
