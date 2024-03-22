@@ -1,5 +1,5 @@
 import pytest
-from p import Solution, TreeNode as Tree, Codec, Trie as TrieClass, WordDictionary
+from tree import Solution, TreeNode as Tree, Codec, Trie as TrieClass, WordDictionary
 
 
 @pytest.fixture(scope="session")
