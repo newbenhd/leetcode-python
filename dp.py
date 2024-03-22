@@ -2,6 +2,20 @@ from typing import List
 
 
 class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        reach = len(nums) - 1
+        for i in range(len(nums) - 2, -1, -1):
+            if i + nums[i] >= reach:
+                reach = i
+        return reach == 0
+
+    def canJumpDP(self, nums: List[int]) -> bool:
+        dp = [False] * len(nums)
+        dp[-1] = True
+        for i in range(len(nums) - 2, -1, -1):
+            dp[i] = any(dp[i + 1 : i + nums[i] + 1])
+        return dp[0]
+
     def uniquePaths(self, m: int, n: int) -> int:
         dp = {}
         for r in range(m - 1, -1, -1):
