@@ -2,6 +2,14 @@ from typing import List
 
 
 class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        hash = set()
+        for n in nums:
+            if n in hash:
+                return True
+            hash.add(n)
+        return False
+
     def maxProfit(self, prices: List[int]) -> int:
         low, high = prices[0], 0
         for n in prices[1:]:
