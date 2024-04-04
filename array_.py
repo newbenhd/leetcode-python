@@ -2,6 +2,18 @@ from typing import List
 
 
 class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        # element in the subarray has to be adjacent to one another. Therefore,
+        # if we iterate through the array nums, let's keep track of the max number,
+        # and set/reset cutting point to current index when current element is greater
+        # than the sum of subarray.
+        high, sub = nums[0], nums[0]
+        for i in range(1, len(nums)):
+            sub = max(nums[i], sub + nums[i])
+            if sub > high:
+                high = sub
+        return high
+
     def productExceptSelf(self, nums: List[int]) -> List[int]:
         output = [1] * len(nums)
         prefix = nums[0]
