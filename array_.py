@@ -2,6 +2,27 @@ from typing import List
 
 
 class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        # keep highest and lowest product subarray.
+        # iterate through the array nums and
+        # set highest or lowest to current element if
+        # product of current element to highest or lowest is
+        # either lower or greater than current element respectively,
+        # and vice versa.
+        # return the maximum of the possible product subarray.
+        # a-b-c-d-e
+        # a: a
+        # b: b, ba
+        # c: c, cb, cba
+        # d: d, dc, dcb, dcba
+        # e: e, ed, edc, edcb, edcba
+        high = low = highest = nums[0]
+        for n in nums[1:]:
+            high, low = max(high * n, low * n, n), min(high * n, low * n, n)
+            if high > highest:
+                highest = high
+        return highest
+
     def maxSubArray(self, nums: List[int]) -> int:
         # element in the subarray has to be adjacent to one another. Therefore,
         # if we iterate through the array nums, let's keep track of the max number,
