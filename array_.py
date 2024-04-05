@@ -2,6 +2,23 @@ from typing import List
 
 
 class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        # when you divide the array into half, either one of the side
+        # will have a[0] > a[-1]. Then you are sure that the side has
+        # the lowest value. If none of the side has such pattern, then
+        # you can return minimum of first elements of left and right side arrays.
+        # continue do so until you find the minimum
+        L, r = 0, len(nums) - 1
+        while L < r:
+            mid = L + ((r - L) // 2)
+            if nums[mid] < nums[L]:
+                r = mid
+            elif nums[mid + 1] > nums[r]:
+                L = mid + 1
+            else:
+                return min(nums[L], nums[mid + 1])
+        return nums[L]
+
     def maxProduct(self, nums: List[int]) -> int:
         # keep highest and lowest product subarray.
         # iterate through the array nums and
