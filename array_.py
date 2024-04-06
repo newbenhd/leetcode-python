@@ -2,6 +2,43 @@ from typing import List
 
 
 class Solution:
+    def binarySearch(self, partial: List[int], target: int) -> int:
+        L, R = 0, len(partial) - 1
+        while L < R:
+            mid = L + ((R - L) // 2)
+            if partial[mid] == target:
+                return mid
+            elif partial[mid] < target:
+                L = mid
+            else:
+                R = mid
+        return -1
+
+    def search(self, nums: List[int], target: int) -> int:
+        # [4,5,6,7,0,1,2], 0
+        # [4,5,6] 7 [0,1,2]
+        # [7,0,1,2]
+        # [7,0] 1 [2]
+        # [7,0,1]
+        # [7] 0 [1]
+        L, R = 0, len(nums) - 1
+
+        while L <= R:
+            mid = L + ((R - L) // 2)
+            if nums[mid] == target:
+                return mid
+            if nums[L] <= nums[mid]:
+                if nums[L] <= target < nums[mid]:
+                    R = mid - 1
+                else:
+                    L = mid + 1
+            else:
+                if nums[mid] < target <= nums[R]:
+                    L = mid + 1
+                else:
+                    R = mid - 1
+        return -1
+
     def findMin(self, nums: List[int]) -> int:
         # when you divide the array into half, either one of the side
         # will have a[0] > a[-1]. Then you are sure that the side has
