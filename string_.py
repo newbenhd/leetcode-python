@@ -1,4 +1,37 @@
+from collections import Counter
+
+
 class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        # ("aaaaaaaaaaaabbbbbcdd", "abcdd", "abbbbbcdd"),
+        # "abbbb"
+        # a: 0
+        # b: -1
+        # c: 1
+        # L: 4
+        # count: 0
+        # lowest: a
+        t_table = Counter(t)
+        count = len(t_table)
+        found = False
+        lowest = s
+        L = 0
+        for i in range(len(s)):
+            if s[i] in t_table:
+                t_table[s[i]] -= 1
+                if t_table[s[i]] == 0:
+                    count -= 1
+            while count == 0:
+                found = True
+                if i - L + 1 < len(lowest):
+                    lowest = s[L : i + 1]
+                if s[L] in t_table:
+                    t_table[s[L]] += 1
+                    if t_table[s[L]] > 0:
+                        count += 1
+                L += 1
+        return lowest if found else ""
+
     def characterReplacement(self, s: str, k: int) -> int:
         # sum(minor_character_count) < k.
         # major = A
