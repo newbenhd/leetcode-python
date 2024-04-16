@@ -1,7 +1,21 @@
+from typing import List, Dict
 from collections import Counter
 
 
 class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        book: Dict[str, List[str]] = {}
+        for s in strs:
+            cs = [0] * 26
+            for k, v in Counter(s).items():
+                cs[ord(k) - ord("a")] = v
+            key = ",".join(map(lambda x: str(x), cs))
+            if key not in book:
+                book[key] = []
+            book[key].append(s)
+
+        return list(book.values())
+
     def isAnagram2(self, s: str, t: str) -> bool:
         def index(x: str):
             return ord(x) - ord("a")
