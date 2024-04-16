@@ -1,7 +1,51 @@
+from typing import List, Dict
 from collections import Counter
 
 
 class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        book: Dict[str, List[str]] = {}
+        for s in strs:
+            cs = [0] * 26
+            for k, v in Counter(s).items():
+                cs[ord(k) - ord("a")] = v
+            key = ",".join(map(lambda x: str(x), cs))
+            if key not in book:
+                book[key] = []
+            book[key].append(s)
+
+        return list(book.values())
+
+    def isAnagram2(self, s: str, t: str) -> bool:
+        def index(x: str):
+            return ord(x) - ord("a")
+
+        if len(s) != len(t):
+            return False
+        v = [0] * 26
+        for i in range(len(s)):
+            v[index(s[i])] += 1
+            v[index(t[i])] -= 1
+        return not any(v)
+
+    def isAnagram(self, s: str, t: str) -> bool:
+        # check two strings have same length
+        # map s to dictionary of key equal to character and value to occurance and track the count of unique characters
+        # iterate t over index and decrement the s dictionary's value on the key equal to the character of current index
+        # if it ever goes to zero decrement the count of unique character by 1. If it's less than zero, increment the count by 1
+        # at the end of iteration, check if the count of unique character is equal to zero.
+        s_count = Counter(s)
+        unique = len(s_count)
+        for c in t:
+            if c not in s_count:
+                return False
+            s_count[c] -= 1
+            if s_count[c] == 0:
+                unique -= 1
+            if s_count[c] < 0:
+                return False
+        return unique == 0
+
     def minWindow(self, s: str, t: str) -> str:
         # ("aaaaaaaaaaaabbbbbcdd", "abcdd", "abbbbbcdd"),
         # "abbbb"
