@@ -2,7 +2,13 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    "s, t, output", [("anagram", "nagaram", True), ("rat", "car", False)]
+    "s, t, output",
+    [
+        ("anagram", "nagaram", True),
+        ("rat", "car", False),
+        ("abcd", "abc", False),
+        ("abc", "aabc", False),
+    ],
 )
 def test_valid_anagram(solution, s, t, output):
     assert solution.isAnagram(s, t) == output

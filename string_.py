@@ -3,6 +3,26 @@ from collections import Counter
 
 
 class Solution:
+    def isValid(self, s: str) -> bool:
+        st = []
+        for c in s:
+            try:
+                if c == ")":
+                    if st.pop() != "(":
+                        return False
+                elif c == "]":
+                    if st.pop() != "[":
+                        return False
+                elif c == "}":
+                    if st.pop() != "{":
+                        return False
+                else:
+                    st.append(c)
+            except IndexError:
+                return False
+
+        return len(st) == 0
+
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         book: Dict[str, List[str]] = {}
         for s in strs:
