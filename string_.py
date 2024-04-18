@@ -3,6 +3,23 @@ from collections import Counter
 
 
 class Solution:
+    def isPalindrome(self, s) -> bool:
+        L, R = 0, len(s) - 1
+        s = s.lower()
+        while L < R:
+            lc, rc = ord(s[L]), ord(s[R])
+            if 48 <= lc <= 57 or 97 <= lc <= 122:
+                if 48 <= rc <= 57 or 97 <= rc <= 122:
+                    if lc != rc:
+                        return False
+                    L += 1
+                    R -= 1
+                else:
+                    R -= 1
+            else:
+                L += 1
+        return True
+
     def isValid(self, s: str) -> bool:
         st = []
         for c in s:
