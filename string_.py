@@ -3,14 +3,30 @@ from collections import Counter
 
 
 class Solution:
-    def isPalindrome(self, s) -> bool:
+    def longestPalindrome(self, s: str) -> str:
+        output = ""
+        for i in range(len(s)):
+            L, R = i, i
+            while L >= 0 and R < len(s) and s[L] == s[R]:
+                if len(s[L : R + 1]) > len(output):
+                    output = s[L : R + 1]
+                L -= 1
+                R += 1
+            L, R = i, i + 1
+            while L >= 0 and R < len(s) and s[L] == s[R]:
+                if len(s[L : R + 1]) > len(output):
+                    output = s[L : R + 1]
+                L -= 1
+                R += 1
+        return output
+
+    def isPalindrome(self, s: str) -> bool:
         L, R = 0, len(s) - 1
         s = s.lower()
         while L < R:
-            lc, rc = ord(s[L]), ord(s[R])
-            if 48 <= lc <= 57 or 97 <= lc <= 122:
-                if 48 <= rc <= 57 or 97 <= rc <= 122:
-                    if lc != rc:
+            if "0" <= s[L] <= "9" or "a" <= s[L] <= "z":
+                if "0" <= s[R] <= "9" or "a" <= s[R] <= "z":
+                    if s[L] != s[R]:
                         return False
                     L += 1
                     R -= 1
