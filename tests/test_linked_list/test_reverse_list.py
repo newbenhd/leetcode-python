@@ -1,5 +1,5 @@
 import pytest
-from linked_list import ListNode
+from linked_list import ListNodeWithEqual as ListNode
 
 
 @pytest.mark.parametrize(
