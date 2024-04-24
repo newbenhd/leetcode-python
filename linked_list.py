@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 
 class ListNodeWithEqual:
@@ -25,6 +25,39 @@ class ListNode:
 
 
 class Solution:
+    def mergeKListsBinary(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        N = len(lists)
+        if N == 0:
+            return None
+        if N == 1:
+            return lists[0]
+        if N == 2:
+            return self.mergeTwoLists(lists[0], lists[1])
+        left = self.mergeKListsBinary(lists[: N // 2])
+        right = self.mergeKListsBinary(lists[N // 2 :])
+        return self.mergeTwoLists(left, right)
+
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        head, tail = None, None
+        while lists:
+            min_i = 0
+            for i in range(1, len(lists)):
+                if not lists[min_i]:
+                    min_i = i
+                elif lists[i] and lists[i].val < lists[min_i].val:
+                    min_i = i
+            if not lists[min_i]:
+                # when every list is None
+                break
+            if not head or not tail:
+                head = tail = lists[min_i]
+                lists[min_i] = lists[min_i].next
+            else:
+                tail.next = lists[min_i]
+                tail = tail.next
+                lists[min_i] = lists[min_i].next
+        return head
+
     def mergeTwoListsRecursive(
         self, list1: Optional[ListNode], list2: Optional[ListNode]
     ) -> Optional[ListNode]:
