@@ -1,4 +1,5 @@
 from typing import Optional, List
+import math
 
 
 class ListNodeWithEqual:
@@ -25,6 +26,21 @@ class ListNode:
 
 
 class Solution:
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        stack = []
+        temp = head
+        while temp:
+            stack.append(temp)
+            temp = temp.next
+        L, R = 0, len(stack) - 1
+        while L < R:
+            temp = stack[L].next
+            stack[L].next = stack[R]
+            stack[R].next = temp
+            L += 1
+            R -= 1
+        stack[L].next = None
+
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         new_head = ListNode(0)
         new_head.next = head
