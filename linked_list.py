@@ -25,6 +25,35 @@ class ListNode:
 
 
 class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        new_head = ListNode(0)
+        new_head.next = head
+        p1, p2 = new_head, new_head
+        for _ in range(n + 1):
+            p2 = p2.next
+        while p2:
+            p2 = p2.next
+            p1 = p1.next
+        p1.next = p1.next.next
+        return new_head.next
+
+    def removeNthFromEndStack(
+        self, head: Optional[ListNode], n: int
+    ) -> Optional[ListNode]:
+        stack = []
+        temp = head
+        while temp:
+            stack.append(temp)
+            temp = temp.next
+        if len(stack) == n and head:
+            return head.next
+        i, j = -n - 1, -n + 1
+        prev, tail = stack[i], stack[j]
+        if j == 0:
+            tail = None
+        prev.next = tail
+        return head
+
     def mergeKListsBinary(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         N = len(lists)
         if N == 0:
