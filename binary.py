@@ -2,6 +2,17 @@ from typing import List
 
 
 class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        # 3: 0011
+        # 0: 0000
+        # 1: 0001
+        # 2: 0010
+        # 4: 0100
+        r = 0
+        for i in range(len(nums)):
+            r ^= i ^ nums[i]
+        return r ^ len(nums)
+
     def hammingWeight(self, n: int) -> int:
         b = f"{n:b}"
         count = 0
