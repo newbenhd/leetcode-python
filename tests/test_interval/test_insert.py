@@ -10,6 +10,11 @@ import pytest
             [4, 8],
             [[1, 2], [3, 10], [12, 16]],
         ),
+        (
+            [[1, 2], [3, 5], [6, 7]],
+            [6, 9],
+            [[1, 2], [3, 5], [6, 9]],
+        ),
     ],
 )
 def test_insert(solution, intervals, newInterval, output):
