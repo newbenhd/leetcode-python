@@ -2,6 +2,17 @@ from typing import List
 
 
 class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
+        intervals.sort(key=lambda x: x[0])
+        new_end = intervals[0][1]
+        removal = 0
+        for start, end in intervals[1:]:
+            if start >= new_end:
+                new_end = end
+            else:
+                removal += 1
+                new_end = min(new_end, end)
+        return removal
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         intervals.sort(key=lambda x: x[0])
         output = []
