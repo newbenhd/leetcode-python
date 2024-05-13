@@ -148,7 +148,7 @@ class Solution:
                 low = n
             elif n - low > high:
                 high = n - low
-return high
+        return high
 
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         cache = {}
