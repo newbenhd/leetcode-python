@@ -35,14 +35,15 @@ class RandomizedSet:
 
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
-        total, mid, output = 0, 0, 0
+        if sum(gas) < sum(cost):
+            return -1
+        total, output = 0, 0
         for i in range(len(gas)):
-            total += gas[i] - cost[i]
-            mid += gas[i] - cost[i]
-            if mid < 0:
-                mid = 0
+            total += (gas[i] - cost[i])
+            if total < 0:
+                total = 0
                 output = i + 1
-        return total if total < 0 else output
+        return output
 
 
     def hIndex(self, citations: List[int]) -> int:
