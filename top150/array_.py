@@ -34,6 +34,25 @@ class RandomizedSet:
 
 
 class Solution:
+    def romanToInt(self, s: str) -> int:
+        output = 0
+        map = {
+            'I': 1,
+            'V': 5,
+            'X': 10,
+            'L': 50,
+            'C': 100,
+            'D': 500,
+            'M': 1000
+        }
+        last = 'I'
+        for i in range(len(s)):
+            if i + 1 < len(s) and map[s[i]] < map[s[i + 1]]:
+                output -= map[s[i]]
+            else:
+                output += map[s[i]]
+        return output
+
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
         if sum(gas) < sum(cost):
             return -1
